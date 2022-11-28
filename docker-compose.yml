@@ -1,58 +1,57 @@
 version: "3"
 services:
-# ahora se indican los servicios por el orden que se quiere que se inicien.
+# ahora se indican los servicios por el orden en que se quiere que se inicien.
 
-#Por ejemplo, mongo debe estar antes de order.
+#Por ejemplo, mongo debe estar antes de order
 #mongo: mismo nombre usado en el run.sh de Order y application.properties.
-#Se resuelven en una dirección IP.
-  mongo:
-    image: martavp09/p2gps:db
-    deploy:
-      replicas: 1 # para escalabilidad del servicio.
-      resources:
-        limits:
-          cpus: "0.15"
-          #memory: 200M
-      restart_policy:
-        condition: none #reiniciar el contenedor si falla
-    ports:
+#Se resuelve en una dirección IP
+    mongo:
+        image: martavp09/p2gps:db
+        deploy:
+            replicas: 1 # para escabilidad del servicio.
+            resources:
+                limits:
+                    cpus: "0.15"
+                    #memory: 200M
+            restart_policy:
+                condition: none #reiniciar el contenedor si falla
+        ports:
 # mapeo el Puerto del contenedor (derecha) con el puerto
 # del host del servicio (izquierda)
-      - "28017"
-      - "27017"
-    volumes:
-      - "db-data:/var/logs/" # para dar persistencia a la sesión
-  order:
-    image: martavp09/p2gps:order
-    depends_on:
-#le pasamos al servicio order la IP del servicio mongo
-      - "mongo"
-    deploy:
-      replicas: 1
-      resources:
-        limits:
-          cpus: "1.0"
-          #memory: 500M
-      restart_policy:
-        condition: none
-    ports:
-      - "8080"
-  web:
-    image: martavp09/p2gps:web
-    deploy:
-      replicas: 1
-      resources:
-        limits:
-          cpus: "0.25"
-          #memory: 300M
-      restart_policy:
-        condition: none
-    ports: 
-      - "8082"
-
+            - "28017"
+            - "27017"
+        volumes:
+            - "db-data:/var/logs/" # para dar persistencia a la sesión
+    order:
+        image: martavp09/p2gps:order
+        depends_on:
+# le pasamos al servicio order la IP del servicio mongo	
+            - "mongo"
+        deploy:
+            replicas: 1
+            resources:
+                limits:
+                    cpus: "1.0"
+                    #memory: 500M
+            restart_policy:
+                condition: none
+        ports:
+            - "8080"
+    web:
+        image: martavp09/p2gps:web
+        deploy:
+            replicas: 1 
+            resources:
+                limits:
+                    cpus: "0.25"
+                    #memory: 300M
+            restart_policy:
+                condition: none
+        ports:
+            - "8082"		
 volumes:
-  db-data:
-    driver: azure_file
-    driver_opts:
-      share_name: db-data
-      storage_account_name: almacengps
+    db-data:
+        driver: azure_file
+        driver_opts:
+            share_name: db-data
+            storage_account_name: almacengps4364
